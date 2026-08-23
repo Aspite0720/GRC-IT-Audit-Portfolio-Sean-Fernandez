@@ -243,6 +243,37 @@ h2, h3 { font-weight: 800; }
 .status-stamp.progress { color: var(--amber); }
 .status-stamp.planned  { color: var(--gray); }
 
+/* ---- ledger rows that link out to the actual file ------------------------*/
+a.ledger-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 4px;
+  padding: 0.55rem 0.4rem;
+  margin: 0 -0.4rem;
+  transition: background 0.15s ease;
+}
+a.ledger-link:hover,
+a.ledger-link:focus-visible {
+  background: rgba(0,0,0,0.035);
+}
+a.ledger-link:hover .status-stamp,
+a.ledger-link:focus-visible .status-stamp {
+  text-decoration: underline;
+}
+a.ledger-link .file-cta {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+a.ledger-link:hover .file-cta,
+a.ledger-link:focus-visible .file-cta {
+  opacity: 1;
+}
+
 /* ---- timeline (About page) ------------------------------------------------*/
 .timeline-item {
   padding: 1rem 0 1rem 1.1rem;
