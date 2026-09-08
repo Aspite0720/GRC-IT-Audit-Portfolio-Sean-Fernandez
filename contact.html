@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css\style.css">
 </head>
 <body>
 
@@ -49,20 +49,21 @@
   <div class="row g-5">
     <div class="col-lg-7">
       <span class="eyebrow">Message form</span>
-      <form id="contact-form" class="needs-validation" novalidate>
+  
+      <form id="contact-form" class="needs-validation" action="https://formspree.io/f/xoeqkobn" method="POST" novalidate>
         <div class="mb-3">
           <label for="name" class="form-label">NAME</label>
-          <input type="text" class="form-control" id="name" required>
+          <input type="text" class="form-control" id="name" name="name" required>
           <div class="invalid-feedback">Please enter your name.</div>
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">EMAIL</label>
-          <input type="email" class="form-control" id="email" required>
+          <input type="email" class="form-control" id="email" name="email" required>
           <div class="invalid-feedback">Please enter a valid email address.</div>
         </div>
         <div class="mb-3">
           <label for="subject" class="form-label">SUBJECT</label>
-          <select class="form-select" id="subject" required>
+          <select class="form-select" id="subject" name="subject" required>
             <option value="" selected disabled>Choose one</option>
             <option>Job / internship opportunity</option>
             <option>Portfolio feedback</option>
@@ -73,7 +74,7 @@
         </div>
         <div class="mb-3">
           <label for="message" class="form-label">MESSAGE</label>
-          <textarea class="form-control" id="message" rows="5" required></textarea>
+          <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
           <div class="invalid-feedback">Please enter a message.</div>
         </div>
         <button type="submit" class="btn btn-stamp">Submit for record</button>
@@ -101,7 +102,7 @@
           <span class="small fw-bold">Mandaluyong City, Philippines</span>
         </div>
       </div>
-      
+
     </div>
   </div>
 </section>
@@ -115,5 +116,51 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/script.js"></script>
+<script>
+  // Handles the contact form submit: sends to Formspree via fetch so the
+  // visitor stays on the page and sees a status message instead of being
+  // redirected away.
+  (function () {
+    const form = document.getElementById('contact-form');
+    const status = document.getElementById('form-status');
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      if (!form.checkValidity()) {
+        e.stopPropagation();
+        form.classList.add('was-validated');
+        return;
+      }
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      status.textContent = '';
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          status.innerHTML = '<span class="text-success">Message sent — thanks, I\'ll get back to you soon.</span>';
+          form.reset();
+          form.classList.remove('was-validated');
+        } else {
+          status.innerHTML = '<span class="text-danger">Something went wrong. Please try emailing me directly instead.</span>';
+        }
+      } catch (err) {
+        status.innerHTML = '<span class="text-danger">Something went wrong. Please try emailing me directly instead.</span>';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit for record';
+      }
+    });
+  })();
+</script>
 </body>
 </html>
